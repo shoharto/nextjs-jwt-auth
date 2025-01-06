@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useLogoutMutation } from '@/lib/services/authApi';
-import { clearAuthData } from '@/lib/utils/auth';
+import { authUtils } from '@/lib/utils/auth';
 import { config } from '@/lib/config';
 
 export function DashboardSidebar() {
@@ -13,7 +13,7 @@ export function DashboardSidebar() {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      clearAuthData();
+      authUtils.clearTokens();
       window.location.href = config.routes.public.login;
     }
   };

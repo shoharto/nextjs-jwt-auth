@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { AuthResponse, LoginRequest, RegisterRequest } from '../types/auth';
 import type { Profile } from '../types/api';
 import { config } from '../config';
+import { authUtils } from '../utils/auth';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -9,7 +10,7 @@ export const authApi = createApi({
     baseUrl: config.api.baseUrl,
     credentials: 'include',
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem(config.auth.tokenNames.access);
+      const token = authUtils.getAccessToken();
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
@@ -50,6 +51,4 @@ export const {
   useGetProfileQuery,
 } = authApi;
 
-export const isAuthenticated = () => {
-  return !!localStorage.getItem(config.auth.tokenNames.access);
-}; 
+export const isAuthenticated = authUtils.isAuthenticated; 

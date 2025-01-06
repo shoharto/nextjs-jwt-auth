@@ -1,11 +1,21 @@
-export function clearAuthData() {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('refreshToken');
-  document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-  document.cookie = 'refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-}
+import { config } from '../config';
 
-export function handleLogout() {
-  clearAuthData();
-  window.location.href = '/login';
-} 
+export const authUtils = {
+  setTokens: (accessToken: string, refreshToken: string) => {
+    localStorage.setItem(config.auth.tokenNames.access, accessToken);
+    localStorage.setItem(config.auth.tokenNames.refresh, refreshToken);
+  },
+  
+  clearTokens: () => {
+    localStorage.removeItem(config.auth.tokenNames.access);
+    localStorage.removeItem(config.auth.tokenNames.refresh);
+  },
+
+  getAccessToken: () => {
+    return localStorage.getItem(config.auth.tokenNames.access);
+  },
+
+  isAuthenticated: () => {
+    return !!localStorage.getItem(config.auth.tokenNames.access);
+  }
+}; 

@@ -7,6 +7,7 @@ import { useLoginMutation } from '@/lib/services/authApi';
 import { useState } from 'react';
 import type { ApiError } from '@/lib/types/api';
 import { config } from '@/lib/config';
+import { authUtils } from '@/lib/utils/auth';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -31,8 +32,7 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await login(data).unwrap();
-      localStorage.setItem(config.auth.tokenNames.access, response.accessToken);
-      localStorage.setItem(config.auth.tokenNames.refresh, response.refreshToken);
+      authUtils.setTokens(response.accessToken, response.refreshToken);
       router.push(config.routes.protected.dashboard);
     } catch (err) {
       const apiError = err as ApiError;
