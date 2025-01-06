@@ -1,22 +1,13 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { AuthResponse, LoginRequest, RegisterRequest } from '../types/auth';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import type { AuthResponse, LoginRequest, RegisterRequest, RefreshTokenResponse } from '../types/auth';
 import type { Profile } from '../types/api';
 import { config } from '../config';
+import { baseQueryWithReauth } from '../utils/baseQuery';
 import { authUtils } from '../utils/auth';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: config.api.baseUrl,
-    credentials: 'include',
-    prepareHeaders: (headers) => {
-      const token = authUtils.getAccessToken();
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, LoginRequest>({
       query: (credentials) => ({
@@ -41,6 +32,15 @@ export const authApi = createApi({
     getProfile: builder.query<Profile, void>({
       query: () => config.api.endpoints.users.profile,
     }),
+    refresh: builder.mutation<RefreshTokenResponse, void>({
+      query: () => ({
+        url: config.api.endpoints.auth.refresh,
+        method: 'POST',
+        body: {
+          refreshToken: authUtils.getRefreshToken(),
+        },
+      }),
+    }),
   }),
 });
 
@@ -49,6 +49,7 @@ export const {
   useRegisterMutation,
   useLogoutMutation,
   useGetProfileQuery,
+  useRefreshMutation,
 } = authApi;
 
 export const isAuthenticated = authUtils.isAuthenticated; 
