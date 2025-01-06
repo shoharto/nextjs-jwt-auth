@@ -6,6 +6,7 @@ import { useRegisterMutation } from '@/lib/services/authApi';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { ApiError } from '@/lib/types/api';
+import { config } from '@/lib/config';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -32,7 +33,7 @@ export default function RegisterForm() {
     try {
       setError('');
       await register(data).unwrap();
-      router.push('/login?registered=true');
+      router.push(`${config.routes.public.login}?registered=true`);
     } catch (err) {
       const apiError = err as ApiError;
       setError(apiError.data?.message || 'Registration failed. Please try again.');

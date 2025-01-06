@@ -2,23 +2,31 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { isAuthenticated } from '@/lib/services/authApi';
-import { AUTH_ROUTES } from '@/lib/constants/auth';
+import { config } from '@/lib/config';
 
 export function withAuth<P extends object>(
-  WrappedComponent: React.ComponentType<P>, 
-  requireAuth = true
+  WrappedComponent: React.ComponentType<P>,
+  requireAuth: boolean = true
 ) {
-  return function AuthComponent(props: P) {
+  return function WithAuthComponent(props: P) {
     const router = useRouter();
+    const isAuthed = isAuthenticated();
 
     useEffect(() => {
-      const auth = isAuthenticated();
-      if (requireAuth && !auth) {
-        router.replace(AUTH_ROUTES.LOGIN);
-      } else if (!requireAuth && auth) {
-        router.replace(AUTH_ROUTES.DASHBOARD);
+      if (requireAuth && !isAuthed) {
+        router.replace(config.routes.public.login);
+      } else if (!requireAuth && isAuthed) {
+        router.replace(config.routes.protected.dashboard);
       }
-    }, [router]);
+    }, [router, isAuthed]);
+
+    if (requireAuth && !isAuthed) {
+      return null;
+    }
+
+    if (!requireAuth && isAuthed) {
+      return null;
+    }
 
     return <WrappedComponent {...props} />;
   };

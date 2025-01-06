@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { withAuth } from '@/components/hoc/withAuth';
+import { config } from '@/lib/config';
 
 function Home() {
   return (
@@ -25,13 +26,13 @@ function Home() {
 
         <div className="mt-8 space-y-4">
           <Link
-            href="/register"
+            href={config.routes.public.register}
             className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Create Account
           </Link>
           <Link
-            href="/login"
+            href={config.routes.public.login}
             className="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700"
           >
             Sign In

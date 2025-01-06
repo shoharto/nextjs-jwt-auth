@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useLogoutMutation } from '@/lib/services/authApi';
 import { clearAuthData } from '@/lib/utils/auth';
+import { config } from '@/lib/config';
 
 export function DashboardSidebar() {
   const [logout] = useLogoutMutation();
@@ -13,7 +14,7 @@ export function DashboardSidebar() {
       console.error('Logout error:', error);
     } finally {
       clearAuthData();
-      window.location.href = '/login';
+      window.location.href = config.routes.public.login;
     }
   };
 
@@ -25,7 +26,7 @@ export function DashboardSidebar() {
         </div>
         <nav className="flex-1 p-4">
           <Link 
-            href="/dashboard/profile" 
+            href={config.routes.protected.profile}
             className="block py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             Profile

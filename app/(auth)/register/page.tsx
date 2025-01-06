@@ -3,6 +3,7 @@ import RegisterForm from '@/components/forms/RegisterForm';
 import Link from 'next/link';
 import Image from 'next/image';
 import { withAuth } from '@/components/hoc/withAuth';
+import { config } from '@/lib/config';
 
 function RegisterPage() {
   return (
@@ -22,7 +23,7 @@ function RegisterPage() {
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Already have an account?{' '}
             <Link 
-              href="/login" 
+              href={config.routes.public.login} 
               className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
             >
               Sign in
