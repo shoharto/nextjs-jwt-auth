@@ -1,20 +1,23 @@
 'use client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useLogoutMutation } from '@/lib/services/authApi';
 import { authUtils } from '@/lib/utils/auth';
+import { createNavigation } from '@/lib/utils/navigation';
 import { config } from '@/lib/config';
 
 export function DashboardSidebar() {
+  const router = useRouter();
+  const navigation = createNavigation(router);
   const [logout] = useLogoutMutation();
 
   const handleLogout = async () => {
     try {
       await logout().unwrap();
+      authUtils.clearTokens();
+      navigation.goToLogin();
     } catch (error) {
       console.error('Logout error:', error);
-    } finally {
-      authUtils.clearTokens();
-      window.location.href = config.routes.public.login;
     }
   };
 

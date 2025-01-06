@@ -11,11 +11,9 @@ export const authUtils = {
     localStorage.removeItem(config.auth.tokenNames.refresh);
   },
 
-  getAccessToken: () => {
-    return localStorage.getItem(config.auth.tokenNames.access);
-  },
-
-  isAuthenticated: () => {
-    return !!localStorage.getItem(config.auth.tokenNames.access);
-  }
+  getAccessToken: () => localStorage.getItem(config.auth.tokenNames.access),
+  
+  getRefreshToken: () => localStorage.getItem(config.auth.tokenNames.refresh),
+  
+  isAuthenticated: () => !!localStorage.getItem(config.auth.tokenNames.access),
 }; 

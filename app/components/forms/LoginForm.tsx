@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useLoginMutation } from '@/lib/services/authApi';
 import { useState } from 'react';
 import type { ApiError } from '@/lib/types/api';
-import { config } from '@/lib/config';
 import { authUtils } from '@/lib/utils/auth';
+import { createNavigation } from '@/lib/utils/navigation';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -18,6 +18,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
   const router = useRouter();
+  const navigation = createNavigation(router);
   const [login] = useLoginMutation();
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +34,7 @@ export default function LoginForm() {
     try {
       const response = await login(data).unwrap();
       authUtils.setTokens(response.accessToken, response.refreshToken);
-      router.push(config.routes.protected.dashboard);
+      navigation.goToDashboard();
     } catch (err) {
       const apiError = err as ApiError;
       setError(apiError.data?.message || 'An error occurred during login');
