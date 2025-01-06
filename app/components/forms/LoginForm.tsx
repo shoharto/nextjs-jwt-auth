@@ -8,6 +8,9 @@ import { useState } from 'react';
 import type { ApiError } from '@/lib/types/api';
 import { authUtils } from '@/lib/utils/auth';
 import { createNavigation } from '@/lib/utils/navigation';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { styles } from '@/lib/styles';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -44,44 +47,30 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {error && (
-        <div className="text-red-500 text-sm text-center">{error}</div>
+        <div className={styles.error}>{error}</div>
       )}
       
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-          Email
-        </label>
-        <input
-          {...register('email')}
-          type="email"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-        />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-        )}
-      </div>
+      <Input<LoginFormData>
+        label="Email"
+        name="email"
+        type="email"
+        register={register}
+        error={errors.email?.message}
+        placeholder="john@example.com"
+      />
 
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-          Password
-        </label>
-        <input
-          {...register('password')}
-          type="password"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-        />
-        {errors.password && (
-          <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
-        )}
-      </div>
+      <Input<LoginFormData>
+        label="Password"
+        name="password"
+        type="password"
+        register={register}
+        error={errors.password?.message}
+        placeholder="••••••••"
+      />
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-      >
+      <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Signing in...' : 'Sign in'}
-      </button>
+      </Button>
     </form>
   );
 } 

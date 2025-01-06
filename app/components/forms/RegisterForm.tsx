@@ -7,6 +7,9 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { ApiError } from '@/lib/types/api';
 import { config } from '@/lib/config';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { styles } from '@/lib/styles';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -41,65 +44,40 @@ export default function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6" noValidate>
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium">
-            Full Name
-          </label>
-          <input
-            {...registerField('name')}
-            type="text"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-            placeholder="John Doe"
-          />
-          {errors.name && (
-            <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium">
-            Email address
-          </label>
-          <input
-            {...registerField('email')}
-            type="email"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-            placeholder="john@example.com"
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium">
-            Password
-          </label>
-          <input
-            {...registerField('password')}
-            type="password"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-            placeholder="••••••••"
-          />
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
-          )}
-        </div>
-      </div>
-
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
       {error && (
-        <div className="text-sm text-red-500 text-center">{error}</div>
+        <div className={styles.error}>{error}</div>
       )}
+      
+      <Input<RegisterFormData>
+        label="Full Name"
+        name="name"
+        register={registerField}
+        error={errors.name?.message}
+        placeholder="John Doe"
+      />
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-      >
+      <Input<RegisterFormData>
+        label="Email"
+        name="email"
+        type="email"
+        register={registerField}
+        error={errors.email?.message}
+        placeholder="john@example.com"
+      />
+
+      <Input<RegisterFormData>
+        label="Password"
+        name="password"
+        type="password"
+        register={registerField}
+        error={errors.password?.message}
+        placeholder="••••••••"
+      />
+
+      <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Creating account...' : 'Create account'}
-      </button>
+      </Button>
     </form>
   );
 } 
