@@ -1,13 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { AuthResponse, LoginRequest, RegisterRequest } from '../types/auth';
 import type { Profile } from '../types/api';
+import { TOKEN_NAMES } from '../constants/auth';
+import { API_BASE_URL } from '../constants/api';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({ 
-    baseUrl: 'http://localhost:3000',
+    baseUrl: API_BASE_URL,
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem('accessToken');
+      const token = localStorage.getItem(TOKEN_NAMES.ACCESS);
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
@@ -17,39 +19,42 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, LoginRequest>({
       query: (credentials) => ({
-        url: '/api/auth/login',
+        url: '/auth/login',
         method: 'POST',
         body: credentials,
+        credentials: 'include',
       }),
     }),
     register: builder.mutation<void, RegisterRequest>({
       query: (userData) => ({
-        url: '/api/auth/register',
+        url: '/auth/register',
         method: 'POST',
         body: userData,
       }),
     }),
     logout: builder.mutation<void, void>({
       query: () => ({
-        url: '/api/auth/logout',
+        url: '/auth/logout',
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
       }),
     }),
     getProfile: builder.query<Profile, void>({
       query: () => ({
-        url: '/api/users/profile',
+        url: '/users/profile',
         method: 'GET',
       }),
     }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useLogoutMutation, useGetProfileQuery } = authApi;
+export const { 
+  useLoginMutation, 
+  useRegisterMutation, 
+  useLogoutMutation, 
+  useGetProfileQuery 
+} = authApi;
 
 export const isAuthenticated = () => {
   if (typeof window === 'undefined') return false;
-  return !!localStorage.getItem('accessToken');
+  return !!localStorage.getItem(TOKEN_NAMES.ACCESS);
 }; 

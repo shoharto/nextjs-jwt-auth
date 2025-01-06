@@ -40,7 +40,10 @@ function LoginFormContent() {
     } catch (err) {
       console.error('Login error:', err);
       const apiError = err as ApiError;
-      setError(apiError.data?.message || 'Login failed. Please try again.');
+      setError(
+        apiError.data?.message || 
+        'Unable to connect to the server. Please try again.'
+      );
     }
   };
 
